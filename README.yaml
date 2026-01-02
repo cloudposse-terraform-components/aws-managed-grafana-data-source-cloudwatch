@@ -1,0 +1,101 @@
+name: "aws-managed-grafana-data-source-cloudwatch"
+# Canonical GitHub repo
+github_repo: "cloudposse-terraform-components/aws-managed-grafana-data-source-cloudwatch"
+# Short description of this project
+description: |-
+  This component creates a CloudWatch data source in Amazon Managed Grafana.
+  It enables querying CloudWatch logs and metrics from Grafana dashboards, with support for cross-account access.
+
+usage: |-
+  **Stack Level**: Regional (deployed to core-auto where Grafana workspace exists)
+
+  This component creates a CloudWatch data source in Grafana for querying AWS CloudWatch logs and metrics.
+  It supports cross-account access via IAM role assumption, allowing a central Grafana workspace to query
+  CloudWatch data from multiple AWS accounts.
+
+  ### Prerequisites
+
+  - Amazon Managed Grafana workspace deployed via the `managed-grafana/workspace` component
+  - Grafana API key deployed via the `managed-grafana/api-key` component
+  - (Optional) IAM role in target account for cross-account access
+
+  ### Example Configuration
+
+  ```yaml
+  components:
+    terraform:
+      grafana/datasource/cloudwatch/defaults:
+        metadata:
+          component: managed-grafana/data-source/cloudwatch
+          type: abstract
+        vars:
+          enabled: true
+          grafana_component_name: grafana
+          grafana_api_key_component_name: grafana/api-key
+
+      grafana/datasource/cloudwatch/plat-dev:
+        metadata:
+          component: managed-grafana/data-source/cloudwatch
+          inherits:
+            - grafana/datasource/cloudwatch/defaults
+        vars:
+          name: plat-dev-cloudwatch
+          datasource_name: plat-dev-cloudwatch
+          assume_role_arn: !terraform.state iam-role/grafana-cloudwatch-access plat-use2-dev role.arn
+  ```
+
+  ### Cross-Account Access
+
+  To query CloudWatch data from another AWS account, create an IAM role in the target account
+  that trusts the Grafana workspace's account and has CloudWatch read permissions.
+  Then specify the role ARN in `assume_role_arn`.
+
+  <!-- prettier-ignore-start -->
+  <!-- prettier-ignore-end -->
+
+references:
+  - name: Amazon CloudWatch
+    url: https://docs.aws.amazon.com/cloudwatch/
+    description: "AWS CloudWatch monitoring service"
+  - name: Amazon Managed Grafana
+    url: https://docs.aws.amazon.com/grafana/
+    description: "Managed Grafana service"
+  - name: Grafana CloudWatch Data Source
+    url: https://grafana.com/docs/grafana/latest/datasources/cloudwatch/
+    description: "Grafana CloudWatch plugin documentation"
+  - name: cloudposse-terraform-components
+    url: https://github.com/orgs/cloudposse-terraform-components/repositories
+    description: "Cloud Posse's upstream component library"
+tags:
+  - component/grafana
+  - layer/monitoring
+  - provider/aws
+# Categories of this project
+categories:
+  - component/grafana
+  - layer/monitoring
+  - provider/aws
+# License of this project
+license: "APACHE2"
+# Badges to display
+badges:
+  - name: Latest Release
+    image: https://img.shields.io/github/release/cloudposse-terraform-components/aws-managed-grafana-data-source-cloudwatch.svg?style=for-the-badge
+    url: https://github.com/cloudposse-terraform-components/aws-managed-grafana-data-source-cloudwatch/releases/latest
+  - name: Slack Community
+    image: https://slack.cloudposse.com/for-the-badge.svg
+    url: https://slack.cloudposse.com
+related:
+  - name: "aws-managed-grafana-workspace"
+    description: "Amazon Managed Grafana workspace component"
+    url: "https://github.com/cloudposse-terraform-components/aws-managed-grafana-workspace"
+  - name: "aws-managed-grafana-api-key"
+    description: "Amazon Managed Grafana API key component"
+    url: "https://github.com/cloudposse-terraform-components/aws-managed-grafana-api-key"
+  - name: "Cloud Posse Terraform Modules"
+    description: Our collection of reusable Terraform modules used by our reference architectures.
+    url: "https://docs.cloudposse.com/modules/"
+  - name: "Atmos"
+    description: "Atmos is like docker-compose but for your infrastructure"
+    url: "https://atmos.tools"
+contributors: []
