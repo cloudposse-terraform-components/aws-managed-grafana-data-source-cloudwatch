@@ -3,12 +3,6 @@ variable "region" {
   description = "AWS Region"
 }
 
-variable "cloudwatch_account_id" {
-  type        = string
-  description = "AWS Account ID where CloudWatch logs are stored (the account to query)"
-  default     = ""
-}
-
 variable "cloudwatch_region" {
   type        = string
   description = "AWS Region where CloudWatch logs are stored. Defaults to the component's region if not specified."
