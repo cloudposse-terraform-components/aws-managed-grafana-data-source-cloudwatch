@@ -1,6 +1,6 @@
 module "grafana" {
   source  = "cloudposse/stack-config/yaml//modules/remote-state"
-  version = "1.8.0"
+  version = "2.0.0"
 
   component = var.grafana_component_name
 
@@ -9,7 +9,7 @@ module "grafana" {
 
 module "grafana_api_key" {
   source  = "cloudposse/stack-config/yaml//modules/remote-state"
-  version = "1.8.0"
+  version = "2.0.0"
 
   component = var.grafana_api_key_component_name
 
